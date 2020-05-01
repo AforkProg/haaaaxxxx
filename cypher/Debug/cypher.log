@@ -1,12 +1,18 @@
 ﻿  main.cpp
-c:\users\user\source\repos\cypher\cypher\main.cpp(21): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\cypher\cypher\main.cpp(23): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\cypher\cypher\main.cpp(26): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\cypher\cypher\main.cpp(31): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\cypher\cypher\main.cpp(46): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(24): warning C4129: .: неизвестная escape-последовательность
+c:\users\user\source\repos\cypher\cypher\main.cpp(130): warning C4129: .: неизвестная escape-последовательность
+c:\users\user\source\repos\cypher\cypher\main.cpp(244): warning C4129: .: неизвестная escape-последовательность
+c:\users\user\source\repos\cypher\cypher\main.cpp(289): warning C4129: .: неизвестная escape-последовательность
+c:\users\user\source\repos\cypher\cypher\main.cpp(66): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(71): warning C4018: <: несоответствие типов со знаком и без знака
 c:\users\user\source\repos\cypher\cypher\main.cpp(74): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\cypher\cypher\main.cpp(86): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\cypher\cypher\main.cpp(89): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\cypher\cypher\main.cpp(104): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\cypher\cypher\main.cpp(131): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+c:\users\user\source\repos\cypher\cypher\main.cpp(99): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(189): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(193): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(205): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(260): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(276): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(279): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(306): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\cypher\cypher\main.cpp(356): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
   cypher.vcxproj -> C:\Users\User\source\repos\cypher\Debug\cypher.exe
