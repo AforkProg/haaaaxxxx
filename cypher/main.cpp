@@ -317,13 +317,6 @@ private:
 		}
 	}
 };
-class gamming : public base
-{
-public:
-	
-private:
-
-};
 class change : public base
 {
 public:
@@ -645,7 +638,189 @@ private:
 		}
 	}
 };
+class gamming : public base
+{
+public:
+	void findText()
+	{
 
+	}
+	void createKey(string text)
+	{
+		fstream alph("my_alphabet.alph");
+		string alphDoc;
+		if (alph.is_open())
+			getline(alph, alphDoc);
+		string alphStr;
+		for (int a = 7; a < alphDoc.size(); a++)
+		{
+			if (alphDoc[a] == ',' || alphDoc[a] == '[' || alphDoc[a] == ']' || alphDoc[a] == '[' || alphDoc[a] == '{' || alphDoc[a] == '}' || alphDoc[a] == '"')
+			{
+				continue;
+			}
+			else
+			{
+				alphStr.push_back(alphDoc[a]);
+			}
+		} //alphsize = 51
+		string key;
+		int sym;
+		for (int a = 0; a < text.size(); a++)
+		{
+			sym = rand() % 52;
+			key.push_back(alphStr[sym]);
+		}
+		cout << "Key was generated. Print it on display?(Y/N)";
+		string chos;
+		while (1)
+		{
+			cin >> chos;
+			cmatch result;
+			regex regular("([\\w])");
+			if (regex_search(chos.c_str(), result, regular))
+			{
+				if (chos == "Y")
+				{
+					cout << key << endl;
+					cout << endl;
+					break;
+				}
+				else if (chos == "N")
+				{
+					break;
+				}
+				else
+				{
+					cout << "Incorrect answer. Try again" << endl;
+					continue;
+				}
+			}
+			else
+			{
+				cout << "Incorrect symbol" << endl;
+				system("pause");
+				exit(0);
+			}
+		}
+		saveKey(key, text, alphStr);
+	}
+private:
+	void saveKey(string key, string text, string alph)
+	{
+		cout << "Enter path for save key in document" << endl;
+		string path;
+		cin >> path;
+		cmatch result;
+		regex regular("(\.)""(key)");
+		if (regex_search(path.c_str(), result, regular))
+		{
+			cout << "";
+		}
+		else
+		{
+			cout << "Use .key document extension" << endl;
+			system("pause");
+			exit(0);
+		}
+		ofstream dock;
+		dock.open(path, std::ios::app);
+		if (dock.is_open())
+		{
+			dock << "'alg_type': 'Gamming','key':[" << key;
+			dock << "]}";
+			cout << "Key was saved" << endl;
+		}
+		crypt(key, text, alph);
+	}
+	void crypt(string key, string text, string alph)
+	{
+		string cypher;
+		vector<int> numKey;
+		vector<int> numText;
+		for (int a = 0; a < text.size(); a++)
+		{
+			for (int b = 0; b < alph.size(); b++)
+			{
+				if (text[a] == alph[b])
+				{
+					if (text[a] == ' ')
+						break;
+					numText.push_back(b);
+					continue;
+				}
+				else
+					continue;
+			}
+		}
+		for (int a = 0; a < key.size(); a++)
+		{
+			for (int b = 0; b < alph.size(); b++)
+			{
+				if (text[a] == ' ')
+				{
+					break;
+				}
+				if (key[a] == alph[b])
+				{
+					numKey.push_back(b);
+					continue;
+				}
+				else
+					continue;
+			}
+		}
+		vector<int> numCypher;
+		for (int a = 0; a < numKey.size(); a++)
+		{
+			numCypher.push_back(numKey[a] + numText[a]);
+			if (numCypher[a] > 51)
+			{
+				numCypher[a] = numCypher[a] - 51;
+			}
+		}
+		for (int a = 0; a < numCypher.size(); a++)
+		{
+			for (int b = 0; b < alph.size(); b++)
+			{
+				if (numCypher[a] == b)
+				{
+					cypher.push_back(alph[b]);
+				}
+			}
+		}
+		cout << "Enter path to save cypher: " << endl;
+		string path;
+		cin >> path;
+		regex regular("(\.)""(encrypt)");
+		cmatch result;
+		if (regex_search(path.c_str(), result, regular))
+		{
+			cout << "";
+		}
+		else
+		{
+			cout << "Use .encrypt document extension" << endl;
+			system("pause");
+			exit(0);
+		}
+		ofstream dock;
+		dock.open(path, std::ios::app);
+		if (dock.is_open())
+		{
+			dock << "{'alg_type': 'Gamming', 'text': '";
+			for (int a = 0; a < cypher.size(); a++)
+				dock << cypher[a];
+			dock << "'}";
+			cout << "Cypher was saved" << endl;
+		}
+		else
+		{
+			cout << "Error. Cannot open this document" << endl;
+			system("pause");
+			exit(0);
+		}
+	}
+};
 class crypt
 {
 public:
@@ -668,6 +843,7 @@ int main()
 	decrypt dcr;
 	rePlace a;
 	change b;
+	gamming c;
 	while (1)
 	{
 		srand(time(NULL));
@@ -720,6 +896,12 @@ int main()
 					string textDoc;
 					if (text.is_open())
 					{
+						if (textDoc.size() - 1 < 10)
+						{
+							cout << "Sorry, but for this method use small text (less than 11 symbols)" << endl;
+							system("pause");
+							return 0;
+						}
 						getline(text, textDoc);
 						cr.selectC(a, textDoc);
 					}
@@ -732,7 +914,22 @@ int main()
 				}
 				else if (chos == "2")
 				{
-
+					cout << "Enter path of document with text: " << endl;
+					string path;
+					cin >> path;
+					fstream text(path);
+					string textDoc;
+					if (text.is_open())
+					{
+						getline(text, textDoc);
+						cr.selectC(c, textDoc);
+					}
+					else
+					{
+						cout << "Error. The document was not found" << endl << endl;
+						system("pause");
+						return 0;
+					}
 				}
 				else if (chos == "3")
 				{
