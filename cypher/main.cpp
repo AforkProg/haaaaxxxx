@@ -643,7 +643,46 @@ class gamming : public base
 public:
 	void findText()
 	{
-
+		cout << "Enter path to document with key" << endl;
+		string path;
+		cin >> path;
+		cmatch result;
+		regex regular("(\.)""(key)");
+		if (regex_search(path.c_str(), result, regular))
+		{
+			cout << "";
+		}
+		else
+		{
+			cout << "Use .key document extension" << endl;
+			system("pause");
+			exit(0);
+		}
+		fstream text(path);
+		string keyDoc;
+		string key;
+		if (text.is_open())
+		{
+			getline(text, keyDoc);
+			cmatch result;
+			regex regular("(.+)""(Gamming)""(.+)");
+			if (regex_search(keyDoc.c_str(), result, regular))
+			{
+				findCypher(keyDoc);
+			}
+			else
+			{
+				cout << "Key is not for Change" << endl;
+				system("pause");
+				exit(0);
+			}
+		}
+		else
+		{
+			cout << "Cannot find document" << endl;
+			system("pause");
+			exit(0);
+		}
 	}
 	void createKey(string text)
 	{
@@ -820,6 +859,132 @@ private:
 			exit(0);
 		}
 	}
+	void findCypher(string key)
+	{
+		cout << "Enter path to document with cypher" << endl;
+		string path;
+		cin >> path;
+		cmatch result;
+		regex regular("(\.)""(encrypt)");
+		if (regex_search(path.c_str(), result, regular))
+		{
+			cout << "";
+		}
+		else
+		{
+			cout << "Use .encrypt document extension" << endl;
+			system("pause");
+			exit(0);
+		}
+		fstream text(path);
+		string cypherDoc;
+		if (text.is_open())
+		{
+			getline(text, cypherDoc);
+			cmatch result;
+			regex regular("(.+)""(Gamming)""(.+)");
+			if (regex_search(cypherDoc.c_str(), result, regular))
+			{
+				decrypt(key, cypherDoc);
+			}
+			else
+			{
+				cout << "Key is not for Change" << endl;
+				system("pause");
+				exit(0);
+			}
+		}
+		else
+		{
+			cout << "Error. The document was not found" << endl << endl;
+			system("pause");
+			exit(0);
+		}
+	}
+	void decrypt(string keyT, string cypherT)
+	{
+		fstream alph("my_alphabet.alph");
+		string alphDoc;
+		if (alph.is_open())
+			getline(alph, alphDoc);
+		string alphStr;
+		for (int a = 7; a < alphDoc.size(); a++)
+		{
+			if (alphDoc[a] == ',' || alphDoc[a] == '[' || alphDoc[a] == ']' || alphDoc[a] == '[' || alphDoc[a] == '{' || alphDoc[a] == '}' || alphDoc[a] == '"')
+			{
+				continue;
+			}
+			else
+			{
+				alphStr.push_back(alphDoc[a]);
+			}
+		}
+		string key;
+		vector<int> numKey;
+		vector<int> numCypher;
+		vector<int> numText;
+		for (int a = 29; a < keyT.size(); a++)
+		{
+			if (keyT[a] == ']')
+				break;
+			else
+			{
+				key.push_back(keyT[a]);
+			}
+		}
+		string cypher;
+		for (int a = 33; a < cypherT.size(); a++)
+		{
+			if (cypherT[a] == '\'')
+				break;
+			else
+			{
+				cypher.push_back(cypherT[a]);
+			}
+		}
+		for (int a = 0; a < key.size(); a++)
+		{
+			for (int b = 0; b < alphStr.size(); b++)
+			{
+				if (key[a] == alphStr[b])
+				{
+					numKey.push_back(b);
+				}
+			}
+		}
+		for (int a = 0; a < cypher.size(); a++)
+		{
+			for (int b = 0; b < alphStr.size(); b++)
+			{
+				if (cypher[a] == alphStr[b])
+				{
+					numCypher.push_back(b);
+				}
+			}
+		}
+		for (int a = 0; a < key.size(); a++)
+		{
+			numText.push_back(numCypher[a] - numKey[a]);
+			if (numText[a] < 0)
+			{
+				numText[a] += 51;
+			}
+		}
+		string text;
+		for (int a = 0; a < numText.size(); a++)
+		{
+			text.push_back(alphStr[numText[a]]);
+		}
+		string path;
+		cout << "Enter path to save text" << endl;
+		cin >> path;
+		ofstream dock;
+		dock.open(path, std::ios::app);
+		if (dock.is_open())
+		{
+			dock << text << endl;
+		}
+	}
 };
 class crypt
 {
@@ -864,7 +1029,11 @@ int main()
 			{
 				dcr.selectD(a);
 			}
-			if (cho == 3)
+			else if (cho == 2)
+			{
+				dcr.selectD(c);
+			}
+			else if (cho == 3)
 			{
 				dcr.selectD(b);
 			}
