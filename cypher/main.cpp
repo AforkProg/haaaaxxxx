@@ -190,17 +190,25 @@ private:
 		for (int a = 0; a < cypher.size(); a++)
 			text.push_back(' ');
 		string temp;
+		string numStr;
 		int num;
+
 		for (int a = 0; a < key.size(); a++)
 		{
-			if (key[a] == ',')
-				continue;
-			else
+			int b = a;
+			while (1)
 			{
-				temp = key[a];
-				num = stoi(temp);
-				keyA.push_back(num);
+				if (key[b] == ',')
+				{
+					a = b;
+					break;
+				}
+				numStr.push_back(key[b]);
+				b++;
 			}
+			num = stoi(numStr);
+			keyA.push_back(num);
+			numStr.clear();
 		}
 		int tempT;
 		for (int a = 0; a < cypher.size(); a++)
@@ -795,7 +803,7 @@ private:
 		{
 			for (int b = 0; b < alph.size(); b++)
 			{
-				if (text[a] == ' ')
+				if (text[a] == ' ' || text[a] == '.')
 				{
 					break;
 				}
