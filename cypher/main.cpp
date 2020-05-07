@@ -250,7 +250,7 @@ private:
 		string path;
 		cin >> path;
 		cmatch result;
-		regex regular("(\.)""(key)");
+		regex regular("(\.)""(.key)");
 		if (regex_search(path.c_str(), result, regular))
 		{
 			cout << "";
@@ -261,22 +261,33 @@ private:
 			system("pause");
 			exit(0);
 		}
-		ofstream dock;
-		dock.open(path, std::ios::app);
-		if (dock.is_open())
+		fstream textTemp(path);
+		string textDoc;
+		if (textTemp.is_open())
 		{
-			dock << "Replace {Key: ";
-			for (int a = 0; a < key.size(); a++)
-				dock << key[a] << ",";
-			dock << "}";
-			cout << "Key was saved" << endl;
-			crypt(key, text);
+			cout << "Error. This document exist already" << endl;
+			system("pause");
+			exit(0);
 		}
 		else
 		{
-			cout << "Error. Cannot open this document" << endl;
-			system("pause");
-			exit(0);
+			ofstream dock;
+			dock.open(path, std::ios::app);
+			if (dock.is_open())
+			{
+				dock << "Replace {Key: ";
+				for (int a = 0; a < key.size(); a++)
+					dock << key[a] << ",";
+				dock << "}";
+				cout << "Key was saved" << endl;
+				crypt(key, text);
+			}
+			else
+			{
+				cout << "Error. Cannot open this document" << endl;
+				system("pause");
+				exit(0);
+			}
 		}
 	}
 	void crypt(vector<int> key, string text)
@@ -307,21 +318,32 @@ private:
 			system("pause");
 			exit(0);
 		}
-		ofstream dock;
-		dock.open(path, std::ios::app);
-		if (dock.is_open())
+		fstream textTemp(path);
+		string textDoc;
+		if (textTemp.is_open())
 		{
-			dock << "Replace {cypher: ";
-			for (int a = 0; a < key.size(); a++)
-				dock << cypher[a];
-			dock << "}";
-			cout << "Cypher was saved" << endl;
+			cout << "Error. This document exist already" << endl;
+			system("pause");
+			exit(0);
 		}
 		else
 		{
-			cout << "Error. Cannot open this document" << endl;
-			system("pause");
-			exit(0);
+			ofstream dock;
+			dock.open(path, std::ios::app);
+			if (dock.is_open())
+			{
+				dock << "Replace {cypher: ";
+				for (int a = 0; a < key.size(); a++)
+					dock << cypher[a];
+				dock << "}";
+				cout << "Cypher was saved" << endl;
+			}
+			else
+			{
+				cout << "Error. Cannot open this document" << endl;
+				system("pause");
+				exit(0);
+			}
 		}
 	}
 };
@@ -496,6 +518,22 @@ private:
 	}
 	void decrypt(string key, string cypher)
 	{
+		fstream alph("my_alphabet.alph");
+		string alphDoc;
+		if (alph.is_open())
+			getline(alph, alphDoc);
+		string alphStr;
+		for (int a = 7; a < alphDoc.size(); a++)
+		{
+			if (alphDoc[a] == ',' || alphDoc[a] == '[' || alphDoc[a] == ']' || alphDoc[a] == '[' || alphDoc[a] == '{' || alphDoc[a] == '}' || alphDoc[a] == '"')
+			{
+				continue;
+			}
+			else
+			{
+				alphStr.push_back(alphDoc[a]);
+			}
+		}
 		bool trigger = false;
 		string text; //35--14-- (-5)
 		for (int a = 32; ; a++)
@@ -503,6 +541,27 @@ private:
 			if (a == cypher.size() - 2)
 			{
 				break;
+			}
+
+
+			for (int b = 0; b < alphStr.size(); b++)
+			{
+				if (b == alphStr.size() - 1)
+				{
+					text.push_back(cypher[a]);
+					trigger = true;
+					break;
+				}
+				else if (cypher[a] == alphStr[b])
+				{
+					trigger = false;
+					break;
+				}
+			}
+			if (trigger == true)
+			{
+				trigger = false;
+				continue;
 			}
 			for (int b = 35; b < key.size(); b+=11)
 			{
@@ -570,48 +629,59 @@ private:
 			system("pause");
 			exit(0);
 		}
-		ofstream dock;
-		dock.open(path, std::ios::app);
-		if (dock.is_open())
+		fstream textTemp(path);
+		string textDoc;
+		if (textTemp.is_open())
 		{
-			dock << "'alg_type': 'Change','key':[";
-			for (int a = 0; a < alphText.size(); a++)
-			{
-				dock << "['" << alphText[a] << "'" << ", '" << key[a] << "'],";
-			}
-			dock << "]}";
-			cout << "Key was saved" << endl;
-			dock.close();
-			string cypherTemp;
-			fstream keyT(path);
-			string keyDoc;
-			if (keyT.is_open())
-			{
-				getline(keyT, keyDoc);
-			}
-			for (int a = 0; a < text.size(); a++)
-			{
-				for (int b = 30; b < keyDoc.size(); b += 11)
-				{
-					if (text[a] == keyDoc[b])
-					{
-						cypherTemp.push_back(keyDoc[b + 5]);
-						break;
-					}
-					else
-						continue;
-				}
-			}
-			crypt(cypherTemp);
-		}
-		else
-		{
-			cout << "Error. Cannot open this document" << endl;
+			cout << "Error. This document exist already" << endl;
 			system("pause");
 			exit(0);
 		}
+		else
+		{
+			ofstream dock;
+			dock.open(path, std::ios::app);
+			if (dock.is_open())
+			{
+				dock << "'alg_type': 'Change','key':[";
+				for (int a = 0; a < alphText.size(); a++)
+				{
+					dock << "['" << alphText[a] << "'" << ", '" << key[a] << "'],";
+				}
+				dock << "]}";
+				cout << "Key was saved" << endl;
+				dock.close();
+				string cypherTemp;
+				fstream keyT(path);
+				string keyDoc;
+				if (keyT.is_open())
+				{
+					getline(keyT, keyDoc);
+				}
+				for (int a = 0; a < text.size(); a++)
+				{
+					for (int b = 30; b < keyDoc.size(); b += 11)
+					{
+						if (text[a] == keyDoc[b])
+						{
+							cypherTemp.push_back(keyDoc[b + 5]);
+							break;
+						}
+						else
+							continue;
+					}
+				}
+				crypt(cypherTemp, alph, text);
+			}
+			else
+			{
+				cout << "Error. Cannot open this document" << endl;
+				system("pause");
+				exit(0);
+			}
+		}
 	}
-	void crypt(string cypher)
+	void crypt(string cypher, string alph, string text)
 	{
 		cout << "Enter path to save cypher: " << endl;
 		string path;
@@ -628,21 +698,49 @@ private:
 			system("pause");
 			exit(0);
 		}
-		ofstream dock;
-		dock.open(path, std::ios::app);
-		if (dock.is_open())
+		fstream textTemp(path);
+		string textDoc;
+		if (textTemp.is_open())
 		{
-			dock << "{'alg_type': 'Change', 'text': '";
-			for (int a = 0; a < cypher.size(); a++)
-				dock << cypher[a];
-			dock << "'}";
-			cout << "Cypher was saved" << endl;
+			cout << "Error. This document exist already" << endl;
+			system("pause");
+			exit(0);
 		}
 		else
 		{
-			cout << "Error. Cannot open this document" << endl;
-			system("pause");
-			exit(0);
+			int counter = 0;
+			ofstream dock;
+			dock.open(path, std::ios::app);
+			bool trigger = false;
+			if (dock.is_open())
+			{
+				dock << "{'alg_type': 'Change', 'text': '";
+				for (int a = 0; a < text.size(); a++)
+				{
+					for (int b = 0; b < alph.size(); b++)
+					{
+						if (text[a] == alph[b])
+						{
+							dock << cypher[a - counter];
+							break;
+						}
+						else if (b == alph.size() - 1)
+						{
+							dock << text[a];
+							counter++;
+							break;
+						}
+					}
+				}
+				dock << "'}";
+				cout << "Cypher was saved" << endl;
+			}
+			else
+			{
+				cout << "Error. Cannot open this document" << endl;
+				system("pause");
+				exit(0);
+			}
 		}
 	}
 };
@@ -769,15 +867,26 @@ private:
 			system("pause");
 			exit(0);
 		}
-		ofstream dock;
-		dock.open(path, std::ios::app);
-		if (dock.is_open())
+		fstream textTemp(path);
+		string textDoc;
+		if (textTemp.is_open())
 		{
-			dock << "'alg_type': 'Gamming','key':[" << key;
-			dock << "]}";
-			cout << "Key was saved" << endl;
+			cout << "Error. This document exist already" << endl;
+			system("pause");
+			exit(0);
 		}
-		crypt(key, text, alph);
+		else
+		{
+			ofstream dock;
+			dock.open(path, std::ios::app);
+			if (dock.is_open())
+			{
+				dock << "'alg_type': 'Gamming','key':[" << key;
+				dock << "]}";
+				cout << "Key was saved" << endl;
+			}
+			crypt(key, text, alph);
+		}
 	}
 	void crypt(string key, string text, string alph)
 	{
@@ -803,7 +912,7 @@ private:
 		{
 			for (int b = 0; b < alph.size(); b++)
 			{
-				if (text[a] == ' ' || text[a] == '.')
+				if (text[a] == ' ' && text[a] == '.')
 				{
 					break;
 				}
@@ -850,21 +959,32 @@ private:
 			system("pause");
 			exit(0);
 		}
-		ofstream dock;
-		dock.open(path, std::ios::app);
-		if (dock.is_open())
+		fstream textTemp(path);
+		string textDoc;
+		if (textTemp.is_open())
 		{
-			dock << "{'alg_type': 'Gamming', 'text': '";
-			for (int a = 0; a < cypher.size(); a++)
-				dock << cypher[a];
-			dock << "'}";
-			cout << "Cypher was saved" << endl;
+			cout << "Error. This document exist already" << endl;
+			system("pause");
+			exit(0);
 		}
 		else
 		{
-			cout << "Error. Cannot open this document" << endl;
-			system("pause");
-			exit(0);
+			ofstream dock;
+			dock.open(path, std::ios::app);
+			if (dock.is_open())
+			{
+				dock << "{'alg_type': 'Gamming', 'text': '";
+				for (int a = 0; a < cypher.size(); a++)
+					dock << cypher[a];
+				dock << "'}";
+				cout << "Cypher was saved" << endl;
+			}
+			else
+			{
+				cout << "Error. Cannot open this document" << endl;
+				system("pause");
+				exit(0);
+			}
 		}
 	}
 	void findCypher(string key)
