@@ -542,8 +542,6 @@ private:
 			{
 				break;
 			}
-
-
 			for (int b = 0; b < alphStr.size(); b++)
 			{
 				if (b == alphStr.size() - 1)
@@ -810,8 +808,26 @@ public:
 		} //alphsize = 51
 		string key;
 		int sym;
+		bool trigger = false;
 		for (int a = 0; a < text.size(); a++)
 		{
+			for (int b = 0; b < alphStr.size(); b++)
+			{
+				if (text[a] == alphStr[b])
+				{
+					trigger = false;
+					break;
+				}
+				else if (b == alphStr.size() - 1)
+				{
+					trigger = true;
+					break;
+				}
+			}
+			if (trigger == true)
+			{
+				continue;
+			}
 			sym = rand() % 52;
 			key.push_back(alphStr[sym]);
 		}
@@ -912,10 +928,6 @@ private:
 		{
 			for (int b = 0; b < alph.size(); b++)
 			{
-				if (text[a] == ' ' && text[a] == '.')
-				{
-					break;
-				}
 				if (key[a] == alph[b])
 				{
 					numKey.push_back(b);
@@ -969,13 +981,30 @@ private:
 		}
 		else
 		{
+			int counter = 0;
+			bool trigger = false;
 			ofstream dock;
 			dock.open(path, std::ios::app);
 			if (dock.is_open())
 			{
 				dock << "{'alg_type': 'Gamming', 'text': '";
-				for (int a = 0; a < cypher.size(); a++)
-					dock << cypher[a];
+				for (int a = 0; a < text.size(); a++)
+				{
+					for (int b = 0; b < alph.size(); b++)
+					{
+						if (text[a] == alph[b])
+						{
+							dock << cypher[a - counter];
+							break;
+						}
+						else if (b == alph.size() - 1)
+						{
+							dock << text[a];
+							counter++;
+							break;
+						}
+					}
+				}
 				dock << "'}";
 				cout << "Cypher was saved" << endl;
 			}
@@ -1098,10 +1127,30 @@ private:
 				numText[a] += 51;
 			}
 		}
-		string text;
+		string textTemp;
+		int counter = 0;
+		bool trigger = false;
 		for (int a = 0; a < numText.size(); a++)
 		{
-			text.push_back(alphStr[numText[a]]);
+			textTemp.push_back(alphStr[numText[a - counter]]);
+		}
+		string text;
+		for (int a = 0; a < cypher.size(); a++)
+		{
+			for (int b = 0; b < alphStr.size(); b++)
+			{
+				if (cypher[a] == alphStr[b])
+				{
+					text.push_back(textTemp[a - counter]);
+					break;
+				}
+				else if (b == alphStr.size() - 1)
+				{
+					counter++;
+					text.push_back(cypher[a]);
+					break;
+				}
+			}
 		}
 		string path;
 		cout << "Enter path to save text" << endl;
@@ -1117,15 +1166,11 @@ private:
 class crypt
 {
 public:
-	void selectC(base & method, string text)
+	void cryptFunc(base & method, string text)
 	{
 		method.createKey(text);
 	}
-};
-class decrypt
-{
-public:
-	void selectD(base & method)
+	void decrypt(base & method)
 	{
 		method.findText();
 	}
@@ -1133,7 +1178,6 @@ public:
 int main()
 {
 	crypt cr;
-	decrypt dcr;
 	rePlace a;
 	change b;
 	gamming c;
@@ -1155,15 +1199,15 @@ int main()
 			cin >> cho;
 			if (cho == 1)
 			{
-				dcr.selectD(a);
+				cr.decrypt(a);
 			}
 			else if (cho == 2)
 			{
-				dcr.selectD(c);
+				cr.decrypt(c);
 			}
 			else if (cho == 3)
 			{
-				dcr.selectD(b);
+				cr.decrypt(b);
 			}
 			else
 			{
@@ -1193,14 +1237,8 @@ int main()
 					string textDoc;
 					if (text.is_open())
 					{
-						if (textDoc.size() - 1 < 10)
-						{
-							cout << "Sorry, but for this method use small text (less than 11 symbols)" << endl;
-							system("pause");
-							return 0;
-						}
 						getline(text, textDoc);
-						cr.selectC(a, textDoc);
+						cr.cryptFunc(a, textDoc);
 					}
 					else
 					{
@@ -1219,7 +1257,7 @@ int main()
 					if (text.is_open())
 					{
 						getline(text, textDoc);
-						cr.selectC(c, textDoc);
+						cr.cryptFunc(c, textDoc);
 					}
 					else
 					{
@@ -1238,7 +1276,7 @@ int main()
 					if (text.is_open())
 					{
 						getline(text, textDoc);
-						cr.selectC(b, textDoc);
+						cr.cryptFunc(b, textDoc);
 					}
 					else
 					{
