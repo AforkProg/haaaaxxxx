@@ -1235,8 +1235,19 @@ int main()
 					cin >> path;
 					fstream text(path);
 					string textDoc;
+					int check = 0;
 					if (text.is_open())
 					{
+						while (getline(text, textDoc))
+						{
+							check++;
+							if (check > 1)
+							{
+								cout << "Sorry. As you use pre-pre-pre-alpha-alpha version you cant put here a document with 2 or more strings. Advice: put all you text in one string please C:" << endl;
+								system("pause");
+								return 0;
+							}
+						}
 						getline(text, textDoc);
 						cr.cryptFunc(a, textDoc);
 					}
@@ -1254,8 +1265,19 @@ int main()
 					cin >> path;
 					fstream text(path);
 					string textDoc;
+					int check = 0;
 					if (text.is_open())
 					{
+						while (getline(text, textDoc))
+						{
+							check++;
+							if (check > 1)
+							{
+								cout << "Sorry. As you use pre-pre-pre-alpha-alpha version you cant put here a document with 2 or more strings. Advice: put all you text in one string please C:" << endl;
+								system("pause");
+								return 0;
+							}
+						}
 						getline(text, textDoc);
 						cr.cryptFunc(c, textDoc);
 					}
@@ -1273,8 +1295,19 @@ int main()
 					cin >> path;
 					fstream text(path);
 					string textDoc;
+					int check = 0;
 					if (text.is_open())
 					{
+						while (getline(text, textDoc))
+						{
+							check++;
+							if (check > 1)
+							{
+								cout << "Sorry. As you use pre-pre-pre-alpha-alpha version you cant put here a document with 2 or more strings. Advice: put all you text in one string please C:" << endl;
+								system("pause");
+								return 0;
+							}
+						}
 						getline(text, textDoc);
 						cr.cryptFunc(b, textDoc);
 					}
